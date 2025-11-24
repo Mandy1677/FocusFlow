@@ -18,8 +18,34 @@ const Pomodoro: React.FC<PomodoroProps> = ({ onSessionComplete, compact = false 
   const [timeLeft, setTimeLeft] = useState(MODES.focus.minutes * 60);
   const [isActive, setIsActive] = useState(false);
   
-  // Use ref to track accumulated time to prevent multiple additions on re-renders if strict mode
   const hasCompleted = useRef(false);
+
+  // Simple Beep function using Web Audio API (No external file needed)
+  const playBeep = () => {
+    try {
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        if (!AudioContext) return;
+        
+        const ctx = new AudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, ctx.currentTime); // A5
+        osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.1);
+        
+        gain.gain.setValueAtTime(0.5, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.1);
+        
+        osc.start();
+        osc.stop(ctx.currentTime + 0.1);
+    } catch (e) {
+        console.error("Audio play failed", e);
+    }
+  };
 
   useEffect(() => {
     let interval: ReturnType<typeof setInterval> | null = null;
@@ -33,8 +59,7 @@ const Pomodoro: React.FC<PomodoroProps> = ({ onSessionComplete, compact = false 
       if (mode === 'focus' && !hasCompleted.current) {
         onSessionComplete(MODES.focus.minutes);
         hasCompleted.current = true;
-        // Play notification sound or logic here
-        new Audio('https://actions.google.com/sounds/v1/alarms/beep_short.ogg').play().catch(e => console.log(e));
+        playBeep();
       }
     }
 

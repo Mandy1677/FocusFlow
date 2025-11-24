@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "FocusFlow",
+  "version": "1.0.0",
+  "description": "Track tasks, focus with Pomodoro, and visualize progress.",
+  "action": {
+    "default_popup": "index.html",
+    "default_title": "FocusFlow"
+  },
+  "permissions": [
+    "storage"
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'"
+  }
+}
