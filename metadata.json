@@ -1,0 +1,5 @@
+{
+  "name": "FocusFlow",
+  "description": "A comprehensive productivity companion featuring task tracking with granular progress, a Pomodoro timer with history visualization, and recurring task management, all wrapped in a sleek, Mac-inspired interface.",
+  "requestFramePermissions": []
+}
